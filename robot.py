@@ -7,9 +7,10 @@ from datetime import datetime
 from ws4py.client.threadedclient import WebSocketClient
 
 class PiClient(WebSocketClient):
-    def __init__(self, serverAddress):
+    def __init__(self, serverAddress, serialPort):
         WebSocketClient.__init__(self, serverAddress)
         self.pingTime = datetime.now()
+        self.serialPort = serialPort
 
     def opened(self):
         self.send("Hi there!")
@@ -20,7 +21,7 @@ class PiClient(WebSocketClient):
 
     def received_message(self, m):
         print "Received from server: %s" % (str(m))
-        serialPort.send(str(m))
+        self.serialPort.send(str(m))
 
     def ping(self):
         # ping on 30 minute interval
@@ -34,13 +35,13 @@ class PiClient(WebSocketClient):
 def main():
 
     try:
-        # initialize websocket client
-        piClient = PiClient('ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws')
-        piClient.connect()
-
         # initialize serial port
         serialPort = serial.Serial(port='/dev/ttyUSB0',baudrate='9600')
         serialPort.flushInput()
+
+        # initialize websocket client
+        piClient = PiClient('ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws', serialPort)
+        piClient.connect()
 
         while True:
             # keep websocket alive by sending ping on interval
