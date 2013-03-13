@@ -22,8 +22,9 @@ class PiClient(WebSocketClient):
         print "Received from server: %s" % (str(m))
 
     def ping(self):
+        # ping on 30 minute interval
         elapsedTime = datetime.now() - self.pingTime
-        if (elapsedTime.minutes > 30):
+        if (elapsedTime.seconds > 1800):
             self.send(str(self.pingTime))
             self.pingTime = datetime.now()
 
