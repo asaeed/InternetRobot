@@ -54,8 +54,8 @@
 
         stage = new Kinetic.Stage({
           container: "container",
-          width: 600,
-          height: 400
+          width: 800,
+          height: 600
         });
 
         var layer  = new Kinetic.Layer();
@@ -79,9 +79,9 @@
         // SLIDER
         //
 
-        var sliderW = 512;
-        var sliderH = 40;
-        var knobW = 32;
+        var sliderW = 800;
+        var sliderH = 50;
+        var knobW = 50;
 
         var slider = new Kinetic.Group({
           x: stage.getWidth() / 2 - sliderW / 2,
@@ -166,11 +166,11 @@
         //
 
         var touchBoxW = sliderW;
-        var touchBoxH = 200;
+        var touchBoxH = 400;
 
         var touchBox = new Kinetic.Group({
           x: stage.getWidth() / 2 - touchBoxW / 2,
-          y: 100,
+          y: 150,
         });
         
         var touchBoxBorder = new Kinetic.Rect({
