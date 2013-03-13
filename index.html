@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body { margin: 0px; padding: 0px; }
+      canvas { border: 1px solid #9C9898; }
+    </style>
+    <script src="http://www.html5canvastutorials.com/libraries/kinetic-v4.2.0.js"></script>
+    <script>
+      
+      //
+      // GLOBALS
+      //
+
+      var stage;
+
+      var map = function(x, in_min, in_max, out_min, out_max){
+        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+      };
+
+      window.onload = function() {
+
+        //
+        // WEBSOCKETS
+        //
+
+        var socket = new WebSocket("ws://raspberrypi:8080/ws");
+
+        socket.onopen = function(){  
+          console.log("connected"); 
+        }; 
+        
+        socket.onmessage = function (message) {
+          console.log("receiving: " + message.data);
+          obj = JSON.parse(message.data);
+          console.log(obj);
+          if (obj.neck) {
+            rect.transitionTo({
+              x: map(obj.neck, 0, 180, 0, sliderW - knobW),
+              y: 0,
+              duration: .1
+            });
+          stage.draw();
+          }
+        };
+
+        socket.onclose = function(){
+          console.log("disconnected"); 
+        };
+
+        var sendMessage = function(value){
+          socket.send("{\"neck\":" + value + ".00}");
+        };
+
+        stage = new Kinetic.Stage({
+          container: "container",
+          width: 600,
+          height: 400
+        });
+
+        var layer  = new Kinetic.Layer();
+
+        //
+        // TITLE
+        //
+
+        var textTitle = new Kinetic.Text(
+          {
+            x: 10,
+            y: 10,
+            text: 'control panel',
+            fontSize: 20,
+            fontFamily: 'Calibri',
+            textFill: 'black'
+          }
+        );
+
+        //
+        // SLIDER
+        //
+
+        var sliderW = 512;
+        var sliderH = 40;
+        var knobW = 32;
+
+        var slider = new Kinetic.Group({
+          x: stage.getWidth() / 2 - sliderW / 2,
+          y: 50,
+        });
+
+        // this is to expand group click region
+        var back = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: sliderW,
+          height: sliderH,
+          //strokeWidth: 1,
+          //cornerRadius: 20
+        });
+
+        var line = new Kinetic.Line({
+          points: [0+knobW/2, sliderH/2, sliderW-knobW/2, sliderH/2],
+          stroke: 'red',
+          strokeWidth: 6,
+          lineCap: 'round',
+          lineJoin: 'round'
+        });
+        
+        var rect = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: knobW,
+          height: sliderH,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4,
+          draggable: true,
+          dragBoundFunc: function(pos) {
+            return boundSlider(this, pos);
+          }
+        });
+
+        var boundSlider = function(obj, pos) {
+          var minX = obj.parent.getX();
+          var maxX = minX + sliderW - knobW;
+          var newX = pos.x;
+          if (newX < minX) newX = minX;
+          if (newX > maxX) newX = maxX;
+          return {x: newX, y: obj.getAbsolutePosition().y};
+        }
+
+        slider.add(back);
+        slider.add(line);
+        slider.add(rect);
+
+        slider.on("mousedown touchstart dragend", function() {
+          pos = stage.getTouchPosition();
+          if (!pos)
+            pos = stage.getMousePosition();
+          
+          var g = this;
+          var b = g.getChildren()[0];
+          var r = g.getChildren()[2];
+
+          var newPos = {x: pos.x - g.getX() - knobW/2, y: r.getY()};
+          //console.log(newPos);
+
+          if (newPos.x < 0) newPos.x = 0;
+          if (newPos.x > b.getWidth() - knobW) newPos.x = b.getWidth() - knobW;
+
+          r.transitionTo({
+            x: newPos.x,
+            y: newPos.y,
+            duration: .1
+          });
+          stage.draw();
+
+          var value =  Math.round(map(newPos.x, 0, b.getWidth() - knobW, 0, 180));
+          console.log('sending: ' + value);
+          sendMessage(value);
+        });
+
+        //
+        // TOUCH PAD
+        //
+
+        var touchBoxW = sliderW;
+        var touchBoxH = 200;
+
+        var touchBox = new Kinetic.Group({
+          x: stage.getWidth() / 2 - touchBoxW / 2,
+          y: 100,
+        });
+        
+        var touchBoxBorder = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: touchBoxW,
+          height: touchBoxH,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        var leftBox = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: touchBoxW/4,
+          height: touchBoxH,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        var rightBox = new Kinetic.Rect({
+          x: 3 * touchBoxW/4,
+          y: 0,
+          width: touchBoxW/4,
+          height: touchBoxH,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        var upBox = new Kinetic.Rect({
+          x: touchBoxW/4,
+          y: 0,
+          width: touchBoxW/2,
+          height: touchBoxH/2,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        var downBox = new Kinetic.Rect({
+          x: touchBoxW/4,
+          y: touchBoxH/2,
+          width: touchBoxW/2,
+          height: touchBoxH/2,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        touchBox.add(touchBoxBorder);
+        touchBox.add(leftBox);
+        touchBox.add(rightBox);
+        touchBox.add(upBox);
+        touchBox.add(downBox);
+
+        //
+        // add items to canvas
+        //
+
+        layer.add(slider);
+        layer.add(touchBox);
+        layer.add(textTitle);
+
+        stage.add(layer);
+      };
+
+
+
+      function resize(){
+        console.log("resizing");
+        
+        stage.setWidth(window.innerWidth);
+        stage.setHeight(window.innerHeight);
+        stage.draw();
+        
+      }
+      window.onresize = resize;
+
+      console.log("ready");
+
+    </script>
+  </head>
+  <body>
+    <div id="container"></div>
+  </body>
+</html>
