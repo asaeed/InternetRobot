@@ -3,7 +3,7 @@
   <head>
     <style>
       body { margin: 0px; padding: 0px; }
-      canvas { border: 1px solid #9C9898; align: center; }
+      canvas { border: 1px solid #9C9898; }
     </style>
     <script src="http://www.html5canvastutorials.com/libraries/kinetic-v4.2.0.js"></script>
     <script>
@@ -85,7 +85,7 @@
 
         var slider = new Kinetic.Group({
           x: stage.getWidth() / 2 - sliderW / 2,
-          y: 80,
+          y: 60,
         });
 
         // this is to expand group click region
@@ -170,7 +170,7 @@
 
         var touchBox = new Kinetic.Group({
           x: stage.getWidth() / 2 - touchBoxW / 2,
-          y: 200,
+          y: 180,
         });
         
         var touchBoxBorder = new Kinetic.Rect({
