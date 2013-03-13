@@ -20,6 +20,7 @@ class PiClient(WebSocketClient):
 
     def received_message(self, m):
         print "Received from server: %s" % (str(m))
+        serialPort.send(str(m))
 
     def ping(self):
         # ping on 30 minute interval
