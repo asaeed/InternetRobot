@@ -24,7 +24,7 @@ class PiClient(WebSocketClient):
     def ping(self):
         elapsedTime = datetime.now() - self.pingTime
         if (elapsedTime.seconds > 3):
-            self.send(str(pingTime))
+            self.send(str(self.pingTime))
             self.pingTime = datetime.now()
 
 ################################ MAIN ################################
