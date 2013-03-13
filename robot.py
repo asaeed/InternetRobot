@@ -8,7 +8,7 @@ from ws4py.client.threadedclient import WebSocketClient
 
 class PiClient(WebSocketClient):
     def __init__(self, serverAddress):
-        multiprocessing.Process.__init__(self, serverAddress)
+        WebSocketClient.__init__(self, serverAddress)
         self.pingTime = datetime.now()
 
     def opened(self):
