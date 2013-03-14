@@ -45,7 +45,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
             # if sender is browser, send to robot and other browsers
             if (decoded['from'] == 'browser'):
-                robot.write_message(message)
+                for r in robots:
+                    r.write_message(message)
                 for b in browsers:
                     if (b != self):
                         b.write_message(message)
