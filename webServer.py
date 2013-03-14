@@ -30,7 +30,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         decoded = json.loads(message)
 
         # if the client is informing server who it is, store it
-        if (decoded['clientType']):
+        if ('clientType' in decoded):
             clientType = decoded['clientType']
             if (clientType == 'robot'):
                 robot = self
