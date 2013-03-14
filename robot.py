@@ -13,7 +13,7 @@ class PiClient(WebSocketClient):
         self.serialPort = serialPort
 
     def opened(self):
-        self.send("Hi there!")
+        #self.send("Hi there!")
         print "Connection opened..."
 
     def closed(self, code, reason=None):
