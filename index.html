@@ -49,7 +49,7 @@
         };
 
         var sendMessage = function(value){
-          socket.send("{\"neck\":" + value + ".00}");
+          socket.send("{\"from\":\"client\", \"neck\":" + value + ".00}");
         };
 
         stage = new Kinetic.Stage({

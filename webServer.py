@@ -10,6 +10,7 @@ from tornado.options import define, options
 define("port", default=8080, help="run on the given port", type=int)
 
 clients = []
+robot = 0
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -25,7 +26,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print 'tornado received from client: %s' % message
         #self.write_message('got it!')
         for c in clients:
-            c.write_message(message)
+            if (c != self):
+                c.write_message(message)
 
     def on_close(self):
         print 'connection closed'

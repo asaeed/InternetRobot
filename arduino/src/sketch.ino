@@ -99,8 +99,9 @@ void sendData() {
   
   //freeMem("send start");
   aJsonObject *root = aJson.createObject();
-  aJsonObject *neck;
-  aJson.addItemToObject(root, "heading",  neck = aJson.createItem(heading)); 
+  aJsonObject *from, *compass;
+  aJson.addItemToObject(root, "from",  from = aJson.createItem("robot")); 
+  aJson.addItemToObject(root, "heading",  compass = aJson.createItem(heading)); 
   
   char* json = aJson.print(root);
   Serial2.println(json);
