@@ -32,6 +32,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         # if the client is informing server who it is, store it
         if ('clientType' in decoded):
             clientType = decoded['clientType']
+            print "clineType: " + clientType
             if (clientType == 'robot'):
                 robot = self
             if (clientType == 'browser'):
