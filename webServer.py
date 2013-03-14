@@ -52,8 +52,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         print 'connection closed'
-        browsers.remove(self)
-        robots.remove(self)
+        if (self in browsers):
+            browsers.remove(self)
+        if (self in robots):
+            robots.remove(self)
 
 ################################ MAIN ################################
 
