@@ -20,7 +20,6 @@ class IndexHandler(tornado.web.RequestHandler):
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print 'new connection'
-        #clients.append(self)
         #self.write_message("connected")
 
     def on_message(self, message):
@@ -54,6 +53,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print 'connection closed'
         browsers.remove(self)
+        robots.remove(self)
 
 ################################ MAIN ################################
 

@@ -39,7 +39,7 @@ void setup() {
     neckMotor.write(neckAngle-1);
     
     Serial.println("setup done");
-    //freeMem("starting");
+    //printFreeMemory("starting");
 }
 
 void loop() {
@@ -47,7 +47,7 @@ void loop() {
 }
 
 void receiveData() {
-  //freeMem("receive start");
+  //printFreeMemory("receive start");
   Serial.println(msgArray);
   aJsonObject* root = aJson.parse(msgArray);
   aJsonObject* neck = aJson.getObjectItem(root, "neck");
@@ -91,13 +91,13 @@ void receiveData() {
   */
   
   aJson.deleteItem(root);
-  //freeMem("receive end");
+  //printFreeMemory("receive end");
 }
 
 void sendData() {
   float heading = getHeading();
   
-  //freeMem("send start");
+  //printFreeMemory("send start");
   aJsonObject *root = aJson.createObject();
   aJsonObject *from, *compass;
   aJson.addItemToObject(root, "from",  from = aJson.createItem("robot")); 
@@ -108,7 +108,7 @@ void sendData() {
   free(json);
   
   aJson.deleteItem(root);
-  //freeMem("send end");
+  //printFreeMemory("send end");
 }
 
 void handleSerial() {  
@@ -196,7 +196,7 @@ int freeMemory() {
   return free_memory;
 }
 
-void freeMem(char* message) {
+void printFreeMemory(char* message) {
   Serial.print(message);
   Serial.print(":\t");
   Serial.println(freeMemory());

@@ -35,6 +35,8 @@
           console.log("receiving: " + message.data);
           obj = JSON.parse(message.data);
           console.log(obj);
+
+          // move neck position slider to received value
           if (obj.neck) {
             rect.transitionTo({
               x: map(obj.neck, 0, 180, 0, sliderW - knobW),
@@ -89,7 +91,7 @@
           y: 60,
         });
 
-        // this is to expand group click region
+        // draw invisible background to expand group click region
         var back = new Kinetic.Rect({
           x: 0,
           y: 0,
