@@ -52,7 +52,7 @@ def main():
                 result = serialPort.readline().replace("\n", "")
 
                 # send it back to tornado
-                #piClient.send(result)
+                piClient.send(result)
 
     except KeyboardInterrupt:
         piClient.close()
