@@ -10,7 +10,7 @@ import json
 
 define("port", default=8080, help="run on the given port", type=int)
 
-clients = []
+browsers = []
 robot = 0
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -20,8 +20,7 @@ class IndexHandler(tornado.web.RequestHandler):
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print 'new connection'
-        print repr(self)
-        clients.append(self)
+        #clients.append(self)
         #self.write_message("connected")
 
     def on_message(self, message):
@@ -30,21 +29,29 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         # decode to check contents of json
         decoded = json.loads(message)
 
-        # if sender is robot, send to clients
-        if (decoded['from'] == 'robot'):
-            for c in clients:
-                c.write_message(message)
+        # if the client is informing server who it is, store it
+        if (decoded['clientType']):
+            clientType = decoded['clientType']
+            if (clientType == 'robot'):
+                robot = self
+            if (clientType == 'browser'):
+                browsers.append(self)
+        else:
+            # if sender is robot, send to browsers
+            if (decoded['from'] == 'robot'):
+                for b in browsers:
+                    b.write_message(message)
 
-        # if sender is client, send to robot and other clients
-        if (decoded['from'] == 'client'):
-            robot.write_message(message)
-            for c in clients:
-                if (c != self):
-                    c.write_message(message)
+            # if sender is browser, send to robot and other browsers
+            if (decoded['from'] == 'browser'):
+                robot.write_message(message)
+                for b in browsers:
+                    if (b != self):
+                        b.write_message(message)
 
     def on_close(self):
         print 'connection closed'
-        clients.remove(self)
+        browsers.remove(self)
 
 ################################ MAIN ################################
 

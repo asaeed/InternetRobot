@@ -27,7 +27,8 @@
         var socket = new WebSocket("ws://ec2-23-20-219-99.compute-1.amazonaws.com:8080/ws");
 
         socket.onopen = function(){  
-          console.log("connected"); 
+          console.log("connected");
+          socket.send("{\"from\":\"browser\"}");
         }; 
         
         socket.onmessage = function (message) {
@@ -49,7 +50,7 @@
         };
 
         var sendMessage = function(value){
-          socket.send("{\"from\":\"client\", \"neck\":" + value + ".00}");
+          socket.send("{\"from\":\"browser\", \"neck\":" + value + ".00}");
         };
 
         stage = new Kinetic.Stage({
