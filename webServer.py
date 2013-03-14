@@ -11,7 +11,7 @@ import json
 define("port", default=8080, help="run on the given port", type=int)
 
 browsers = []
-robot = 0
+robots = []
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
@@ -32,9 +32,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         # if the client is informing server who it is, store it
         if ('clientType' in decoded):
             clientType = decoded['clientType']
-            print "clineType: " + clientType
+            print "clientType: " + clientType
             if (clientType == 'robot'):
-                robot = self
+                robots.append(self)
             if (clientType == 'browser'):
                 browsers.append(self)
         else:
