@@ -36,7 +36,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
                 robots.append(self)
             if (clientType == 'browser'):
                 browsers.append(self)
-        else:
+        if ('from' in decoded):
             # if sender is robot, send to browsers
             if (decoded['from'] == 'robot'):
                 for b in browsers:
