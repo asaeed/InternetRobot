@@ -28,7 +28,7 @@
 
         socket.onopen = function(){  
           console.log("connected");
-          socket.send("{\"from\":\"browser\"}");
+          socket.send("{\"clientType\":\"browser\"}");
         }; 
         
         socket.onmessage = function (message) {
