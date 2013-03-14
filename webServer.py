@@ -6,6 +6,7 @@ import tornado.web
 import tornado.websocket
 import tornado.gen
 from tornado.options import define, options
+import json
 
 define("port", default=8080, help="run on the given port", type=int)
 
@@ -19,15 +20,27 @@ class IndexHandler(tornado.web.RequestHandler):
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print 'new connection'
+        print self
         clients.append(self)
         #self.write_message("connected")
 
     def on_message(self, message):
         print 'tornado received from client: %s' % message
-        #self.write_message('got it!')
-        for c in clients:
-            if (c != self):
+        
+        # decode to check contents of json
+        decoded = json.loads(message)
+
+        # if sender is robot, send to clients
+        if (decoded['from'] == 'robot'):
+            for c in clients:
                 c.write_message(message)
+
+        # if sender is client, send to robot and other clients
+        if (decoded['from'] == 'client'):
+            robot.write_message(message)
+            for c in clients:
+                if (c != self):
+                    c.write_message(message)
 
     def on_close(self):
         print 'connection closed'
