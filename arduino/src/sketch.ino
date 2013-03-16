@@ -52,43 +52,50 @@ void receiveData() {
   aJsonObject* root = aJson.parse(msgArray);
   aJsonObject* neck = aJson.getObjectItem(root, "neck");
   neckAngle = neck->valuefloat;
-  //Serial.println(neckAngle);
-  neckMotor.write(neckAngle);
+  Serial.print("neck -> ");Serial.println(neckAngle);
   
-  /*
+  float moveValue = 0;
+  aJsonObject* movement = aJson.getObjectItem(root, "move");
+  moveValue = movement->valueint; 
+  Serial.print("move -> "); Serial.println(moveValue);
+  
+  // move neck
+  // TODO: for now, only do it if no movement value is sent
+  if (moveValue < 1 || moveValue > 4)
+    neckMotor.write(neckAngle);
+  
+  // move wheels
   int power = 60;
-  float x, y;
-  if (dataIn[5] == '2') {
-    if (x > .25 && x < .75 && y < .25) { // fwd
-      leftMotor.setSpeed(power);
-      rightMotor.setSpeed(power);
-      delay(100);
-      leftMotor.setSpeed(0);
-      rightMotor.setSpeed(0);
-    }
-    if (x > .25 && x < .75 && y > .75) { // back
-      leftMotor.setSpeed(-power);
-      rightMotor.setSpeed(-power);
-      delay(100);
-      leftMotor.setSpeed(0);
-      rightMotor.setSpeed(0);
-    }
-    if (x < .25 && y > .25 && y < .75) { // turn left
-      leftMotor.setSpeed(-power);
-      rightMotor.setSpeed(power);
-      delay(100);
-      leftMotor.setSpeed(0);
-      rightMotor.setSpeed(0);
-    }
-    if (x > .75 && y > .25 && y < .75) { // turn right
-      leftMotor.setSpeed(power);
-      rightMotor.setSpeed(-power);
-      delay(100);
-      leftMotor.setSpeed(0);
-      rightMotor.setSpeed(0);
-    }
+  if (moveValue == 1) { // fwd
+    Serial.println("moving forward");
+    leftMotor.setSpeed(power);
+    rightMotor.setSpeed(power);
+    delay(100);
+    leftMotor.setSpeed(0);
+    rightMotor.setSpeed(0);
   }
-  */
+  if (moveValue == 2) { // back
+    leftMotor.setSpeed(-power);
+    rightMotor.setSpeed(-power);
+    delay(100);
+    leftMotor.setSpeed(0);
+    rightMotor.setSpeed(0);
+  }
+  if (moveValue == 3) { // turn left
+    leftMotor.setSpeed(-power);
+    rightMotor.setSpeed(power);
+    delay(100);
+    leftMotor.setSpeed(0);
+    rightMotor.setSpeed(0);
+  }
+  if (moveValue == 4) { // turn right
+    leftMotor.setSpeed(power);
+    rightMotor.setSpeed(-power);
+    delay(100);
+    leftMotor.setSpeed(0);
+    rightMotor.setSpeed(0);
+  }
+  
   
   aJson.deleteItem(root);
   //printFreeMemory("receive end");

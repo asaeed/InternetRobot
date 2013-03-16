@@ -52,7 +52,7 @@
         };
 
         var sendMessage = function(key, value){
-          socket.send('{"from":"browser", "' + key + '":' + value + '.00}');
+          socket.send('{"from":"browser", "' + key + '":' + value + '}');
         };
 
         stage = new Kinetic.Stage({
@@ -160,6 +160,7 @@
           stage.draw();
 
           var value =  Math.round(map(newPos.x, 0, b.getWidth() - knobW, 0, 180));
+          value = value + ".00";
           console.log('sending: ' + value);
           sendMessage("neck", value);
         });
@@ -225,6 +226,18 @@
           strokeWidth: 4
         });
 
+        downBox.on("mousedown touchstart dragstart", function() {
+          this.setFill('red');
+          stage.draw();
+          console.log('sending: down');
+          sendMessage("move", 2);
+        });
+
+        downBox.on("mouseup touchend dragend", function() {
+          this.setFill('gray');
+          stage.draw();
+        });
+
         //////////////// LEFT BUTTON
 
         var leftBox = new Kinetic.Rect({
@@ -238,6 +251,18 @@
           strokeWidth: 4
         });
 
+        leftBox.on("mousedown touchstart dragstart", function() {
+          this.setFill('red');
+          stage.draw();
+          console.log('sending: left');
+          sendMessage("move", 3);
+        });
+
+        leftBox.on("mouseup touchend dragend", function() {
+          this.setFill('gray');
+          stage.draw();
+        });
+
         //////////////// RIGHT BUTTON
 
         var rightBox = new Kinetic.Rect({
@@ -249,6 +274,18 @@
           fill: 'gray',
           stroke: 'black',
           strokeWidth: 4
+        });
+
+        rightBox.on("mousedown touchstart dragstart", function() {
+          this.setFill('red');
+          stage.draw();
+          console.log('sending: left');
+          sendMessage("move", 4);
+        });
+
+        rightBox.on("mouseup touchend dragend", function() {
+          this.setFill('gray');
+          stage.draw();
         });
 
         touchBox.add(touchBoxBorder);
