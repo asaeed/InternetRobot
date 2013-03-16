@@ -66,36 +66,36 @@ void receiveData() {
   
   // move wheels
   int power = 60;
+  int duration = 200;
   if (moveValue == 1) { // fwd
     Serial.println("moving forward");
     leftMotor.setSpeed(power);
     rightMotor.setSpeed(power);
-    delay(100);
+    delay(duration);
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
   }
   if (moveValue == 2) { // back
     leftMotor.setSpeed(-power);
     rightMotor.setSpeed(-power);
-    delay(100);
+    delay(duration);
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
   }
   if (moveValue == 3) { // turn left
     leftMotor.setSpeed(-power);
     rightMotor.setSpeed(power);
-    delay(100);
+    delay(duration);
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
   }
   if (moveValue == 4) { // turn right
     leftMotor.setSpeed(power);
     rightMotor.setSpeed(-power);
-    delay(100);
+    delay(duration);
     leftMotor.setSpeed(0);
     rightMotor.setSpeed(0);
   }
-  
   
   aJson.deleteItem(root);
   //printFreeMemory("receive end");
