@@ -51,8 +51,8 @@
           console.log("disconnected"); 
         };
 
-        var sendMessage = function(value){
-          socket.send("{\"from\":\"browser\", \"neck\":" + value + ".00}");
+        var sendMessage = function(key, value){
+          socket.send('{"from":"browser", "' + key + '":' + value + '.00}');
         };
 
         stage = new Kinetic.Stage({
@@ -161,7 +161,7 @@
 
           var value =  Math.round(map(newPos.x, 0, b.getWidth() - knobW, 0, 180));
           console.log('sending: ' + value);
-          sendMessage(value);
+          sendMessage("neck", value);
         });
 
         //
@@ -187,27 +187,7 @@
           strokeWidth: 4
         });
 
-        var leftBox = new Kinetic.Rect({
-          x: 0,
-          y: 0,
-          width: touchBoxW/4,
-          height: touchBoxH,
-          cornerRadius: 4,
-          fill: 'gray',
-          stroke: 'black',
-          strokeWidth: 4
-        });
-
-        var rightBox = new Kinetic.Rect({
-          x: 3 * touchBoxW/4,
-          y: 0,
-          width: touchBoxW/4,
-          height: touchBoxH,
-          cornerRadius: 4,
-          fill: 'gray',
-          stroke: 'black',
-          strokeWidth: 4
-        });
+        //////////////// UP BUTTON
 
         var upBox = new Kinetic.Rect({
           x: touchBoxW/4,
@@ -220,11 +200,51 @@
           strokeWidth: 4
         });
 
+        upBox.on("mousedown touchstart dragstart", function() {
+          this.setFill('red');
+          stage.draw();
+          console.log('sending: up');
+          sendMessage("move", 1);
+        });
+
+        upBox.on("mouseup touchend dragend", function() {
+          this.setFill('gray');
+          stage.draw();
+        });
+
+        //////////////// DOWN BUTTON
+
         var downBox = new Kinetic.Rect({
           x: touchBoxW/4,
           y: touchBoxH/2,
           width: touchBoxW/2,
           height: touchBoxH/2,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        //////////////// LEFT BUTTON
+
+        var leftBox = new Kinetic.Rect({
+          x: 0,
+          y: 0,
+          width: touchBoxW/4,
+          height: touchBoxH,
+          cornerRadius: 4,
+          fill: 'gray',
+          stroke: 'black',
+          strokeWidth: 4
+        });
+
+        //////////////// RIGHT BUTTON
+
+        var rightBox = new Kinetic.Rect({
+          x: 3 * touchBoxW/4,
+          y: 0,
+          width: touchBoxW/4,
+          height: touchBoxH,
           cornerRadius: 4,
           fill: 'gray',
           stroke: 'black',
