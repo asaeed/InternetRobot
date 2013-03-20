@@ -216,6 +216,8 @@
         upBox.on("mouseup touchend dragend", function() {
           this.setFill('gray');
           stage.draw();
+          console.log('sending: stop');
+          sendMessage("move", 0);
         });
 
         //////////////// DOWN BUTTON
@@ -241,6 +243,8 @@
         downBox.on("mouseup touchend dragend", function() {
           this.setFill('gray');
           stage.draw();
+          console.log('sending: stop');
+          sendMessage("move", 0);
         });
 
         //////////////// LEFT BUTTON
@@ -266,6 +270,8 @@
         leftBox.on("mouseup touchend dragend", function() {
           this.setFill('gray');
           stage.draw();
+          console.log('sending: stop');
+          sendMessage("move", 0);
         });
 
         //////////////// RIGHT BUTTON
@@ -291,6 +297,8 @@
         rightBox.on("mouseup touchend dragend", function() {
           this.setFill('gray');
           stage.draw();
+          console.log('sending: stop');
+          sendMessage("move", 0);
         });
 
         touchBox.add(touchBoxBorder);
